@@ -1,4 +1,7 @@
 import random
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.formula_gen import generate_3cnf_formula
 
 def generate_and_save_formulas(n_values, ratios, output_file):
