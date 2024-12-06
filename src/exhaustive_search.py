@@ -1,7 +1,7 @@
 from itertools import product
 
 def exhaustive_search(cnf, literals):
-    # Generate all possible truth assignments
+    # generate all truth assignments 
     for assignment in product([False, True], repeat=len(literals)):
         assignment_map = dict(zip(literals, assignment))
         if is_satisfiable(cnf, assignment_map):

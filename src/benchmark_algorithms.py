@@ -1,44 +1,44 @@
 import time
 import matplotlib.pyplot as plt
 import csv
-from dpll import random_kcnf, dpll  # Ensure these imports are correct
+from dpll import random_kcnf, dpll
 from exhaustive_search import exhaustive_search
 
 def conduct_experiments(n_values, k_values, repetitions=2):
     results = []
 
     for n in n_values:
-        print(f"Running experiments for n={n}...")  # Feedback for progress
+        print(f"Running experiments for n={n}...")
         literals = [chr(i) for i in range(65, 65 + n)]
         for k in k_values:
             m = int(k * n)  # Number of clauses
-            print(f"  Testing ratio k={k} (m={m})...")  # Show progress
+            print(f"  Testing ratio k={k} (m={m})...")
             dpll_times, exhaustive_times, match_count, total_count = [], [], 0, 0
 
             for i in range(repetitions):
                 print(f"    Repetition {i + 1}/{repetitions}...")
                 cnf = random_kcnf(n, m)
 
-                # DPLL Experiment
+                # dpll tests
                 start = time.time()
                 sat_dpll, _ = dpll(cnf)
                 dpll_time = time.time() - start
                 dpll_times.append(dpll_time)
 
-                # Exhaustive Search Experiment
+                # exhaustive search tests
                 start = time.time()
                 sat_exhaustive, _ = exhaustive_search(cnf, literals)
                 exhaustive_time = time.time() - start
                 exhaustive_times.append(exhaustive_time)
 
-                # Compare results
+                # compare
                 match = sat_dpll == sat_exhaustive
                 if match:
                     match_count += 1
 
                 total_count += 1
 
-                # Add summary result to the list
+                # summary
                 results.append({
                     "n": n,
                     "k": k,
@@ -87,24 +87,24 @@ def plot_results(results):
                  arrowprops=dict(facecolor='green', shrink=0.05))
     plt.annotate("Fewer SAT formulas", xy=(4.5, 0.3), xytext=(5.0, 0.5),
                  arrowprops=dict(facecolor='blue', shrink=0.05))
-    plt.show(block=False)  # Display graph without blocking
-    plt.pause(30)  # Pause to let the graph display for 3 seconds
-    plt.close()  # Close the graph window
+    plt.show(block=False)
+    plt.pause(30)  # time for graph to display
+    plt.close()
 
 if __name__ == "__main__":
-    # Define ranges for n and k
-    n_values = [10, 15]  # Smaller n for debugging and faster execution
-    k_values = [3.0, 4.0, 4.26, 5.0]  # Focus on fewer k values for speed
-    repetitions = 2  # Reduced repetitions for testing
+    # define ranges for n and k
+    n_values = [10, 15]  # smaller n for faster execution 
+    k_values = [3.0, 4.0, 4.26, 5.0]
+    repetitions = 2 
 
-    # Conduct experiments
+    # experiments
     print("Starting experiments...")
     results = conduct_experiments(n_values, k_values, repetitions=repetitions)
 
-    # Save results to a CSV file
+    
     save_results_to_csv(results)
 
-    # Plot the graph
+    # graph
     plot_results(results)
     print("All experiments completed.")
 
